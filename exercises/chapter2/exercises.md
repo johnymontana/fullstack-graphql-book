@@ -1,0 +1,6 @@
+# Chapter Two Exercises
+
+1. Consider the other requirements of our business reviews application. Can you write GraphQL queries to address these requirements? What are the results?
+2. What other fields should make use of pagination and ordering in our API? Update the type definitions to include the appropriate ordering and pagination fields and update the resolvers to handle these pagination arguments.
+3. Implement the root-level resolver for `usersById`.
+4. Add a new type to the GraphQL schema and implement its resolver.
