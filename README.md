@@ -2,7 +2,7 @@
 
 [![](meap.png)](https://www.manning.com/books/fullstack-graphql-applications)
 
-This is the companion repository to the book [*Full Stack GraphQL Applications With React, Node.js, and Neo4j*](https://www.manning.com/books/fullstack-graphql-applications) written by [William Lyon](https://twitter.com/lyonwj) and published by Manning. Here you can find the [code](/code) to accompany each chapter as well as the [exercises and solutions](/exercises) from each chapter.
+This is the companion repository to the book [*Full Stack GraphQL Applications With React, Node.js, and Neo4j*](https://www.manning.com/books/fullstack-graphql-applications) written by [William Lyon](https://twitter.com/lyonwj) and published by Manning. Here you can find the [code](fullstack-graphql-book/tree/main/code) to accompany each chapter as well as the [exercises and solutions](fullstack-graphql-book/tree/main/exercises) from each chapter.
 
 ## Table of Contents
 
