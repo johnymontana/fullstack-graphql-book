@@ -1,1 +1,1 @@
-# Exercises
+# Exercises & Solutions
