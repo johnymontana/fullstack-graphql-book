@@ -5,14 +5,14 @@ const businesses = [
     businessId: "b1",
     name: "Missoula Public Library",
     address: "301 E Main St, Missoula, MT 59802",
-    reviewIds: ["r1", "r2"]
+    reviewIds: ["r1", "r2"],
   },
   {
     businessId: "b2",
     name: "San Mateo Public Library",
     address: "55 W 3rd Ave, San Mateo, CA 94402",
-    reviewIds: ["r3"]
-  }
+    reviewIds: ["r3"],
+  },
 ];
 
 const reviews = [
@@ -21,36 +21,35 @@ const reviews = [
     stars: 3,
     text: "Friendly staff. Interlibrary loan is super fast",
     businessId: "b1",
-    userId: "u1"
+    userId: "u1",
   },
   {
     reviewId: "r2",
     stars: 4,
     text: "Easy downtown access, lots of free parking",
     businessId: "b1",
-    userId: "u2"
+    userId: "u2",
   },
   {
     reviewId: "r3",
     stars: 5,
-    text:
-      "Lots of glass and sunlight for reading. Comfy chairs in large print section.",
+    text: "Lots of glass and sunlight for reading. Comfy chairs in large print section.",
     businessId: "b1",
-    userId: "u1"
-  }
+    userId: "u1",
+  },
 ];
 
 const users = [
   {
     userId: "u1",
     name: "Will",
-    reviewIds: ["r1", "r2"]
+    reviewIds: ["r1", "r2"],
   },
   {
     userId: "u2",
     name: "Bob",
-    reviewIds: ["r3"]
-  }
+    reviewIds: ["r3"],
+  },
 ];
 
 const db = { businesses, reviews, users };
@@ -121,7 +120,7 @@ const resolvers = {
         }
       };
       return context.db.businesses
-        .filter(v => {
+        .filter((v) => {
           return v["name"].indexOf(args.search) !== -1;
         })
         .slice(args.offset, args.first)
@@ -129,19 +128,19 @@ const resolvers = {
     },
     allBusinesses: (obj, args, context, info) => {
       return context.db.businesses;
-    }
+    },
   },
   Business: {
     reviews: (obj, args, context, info) => {
-      return obj.reviewIds.map(v => {
-        return context.db.reviews.find(review => {
+      return obj.reviewIds.map((v) => {
+        return context.db.reviews.find((review) => {
           return review.reviewId === v;
         });
       });
     },
     avgStars: (obj, args, context, info) => {
-      const reviews = obj.reviewIds.map(v => {
-        return context.db.reviews.find(review => {
+      const reviews = obj.reviewIds.map((v) => {
+        return context.db.reviews.find((review) => {
           return review.reviewId === v;
         });
       });
@@ -151,35 +150,35 @@ const resolvers = {
           return acc + review.stars;
         }, 0) / reviews.length
       );
-    }
+    },
   },
   Review: {
     user: (obj, args, context, info) => {
-      return context.db.users.find(user => {
+      return context.db.users.find((user) => {
         return user.userId === obj.userId;
       });
     },
     business: (obj, args, context, info) => {
-      return context.db.businesses.find(b => {
+      return context.db.businesses.find((b) => {
         return b.businessId === obj.businessId;
       });
-    }
+    },
   },
   User: {
     reviews: (obj, args, context, info) => {
-      return obj.reviewIds.map(v => {
-        return context.db.reviews.find(review => {
+      return obj.reviewIds.map((v) => {
+        return context.db.reviews.find((review) => {
           return review.reviewId === v;
         });
       });
-    }
-  }
+    },
+  },
 };
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { db }
+  context: { db },
 });
 
 server.listen().then(({ url }) => {
