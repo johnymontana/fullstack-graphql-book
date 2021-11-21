@@ -1,5 +1,5 @@
 {
-  "name": "newproj",
+  "name": "graphql-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.9.16",
-    "neo4j-driver": "^4.0.1",
-    "neo4j-graphql-js": "^2.11.5"
+    "@neo4j/graphql": "^2.4.0",
+    "apollo-server": "^3.5.0",
+    "graphql": "^15.7.2",
+    "neo4j-driver": "^4.4.0"
   }
 }
