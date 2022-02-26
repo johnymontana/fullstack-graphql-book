@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"**/*.js\""
   },
   "author": "William Lyon",
   "license": "Apache-2.0",
@@ -13,5 +14,8 @@
     "apollo-server": "^3.5.0",
     "graphql": "^16.0.1",
     "nodemon": "^1.19.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
   }
 }
