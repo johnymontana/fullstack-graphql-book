@@ -13,7 +13,7 @@
   "dependencies": {
     "apollo-server": "^3.5.0",
     "graphql": "^16.0.1",
-    "nodemon": "^1.19.1"
+    "nodemon": "^2.0.15"
   },
   "devDependencies": {
     "prettier": "^2.5.1"
