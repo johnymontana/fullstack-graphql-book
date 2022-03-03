@@ -1,0 +1,9 @@
+[build]
+command = "npm run build"
+functions = "src/lambda"
+publish = "build"
+
+[[redirects]]
+from = "/graphql"
+to = "/.netlify/functions/graphql"
+status = 200
