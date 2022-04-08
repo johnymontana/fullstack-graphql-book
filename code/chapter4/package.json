@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@neo4j/graphql": "^2.4.0",
-    "apollo-server": "^3.5.0",
-    "graphql": "^15.7.2",
-    "neo4j-driver": "^4.4.0"
+    "@neo4j/graphql": "^3.0.4",
+    "apollo-server": "^3.6.7",
+    "graphql": "^16.3.0",
+    "neo4j-driver": "^4.4.5"
   }
 }
