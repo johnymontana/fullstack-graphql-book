@@ -13,7 +13,7 @@ const resolvers = {
 
 const typeDefs = /* GraphQL */ `
   type Query {
-    fuzzyBusinessByName(searchString: String): [Business]
+    fuzzyBusinessByName(searchString: String): [Business!]!
       @cypher(
         statement: """
         CALL db.index.fulltext.queryNodes( 'businessNameIndex', $searchString+'~')
@@ -24,12 +24,12 @@ const typeDefs = /* GraphQL */ `
 
   type Business {
     businessId: ID!
-    waitTime: Int! @ignore
+    waitTime: Int! @computed
     averageStars: Float!
       @cypher(
         statement: "MATCH (this)<-[:REVIEWS]-(r:Review) RETURN avg(r.stars)"
       )
-    recommended(first: Int = 1): [Business]
+    recommended(first: Int = 1): [Business!]!
       @cypher(
         statement: """
         MATCH (this)<-[:REVIEWS]-(:Review)<-[:WROTE]-(:User)-[:WROTE]->(:Review)-[:REVIEWS]->(rec:Business)
@@ -42,14 +42,14 @@ const typeDefs = /* GraphQL */ `
     state: String!
     address: String!
     location: Point!
-    reviews: [Review] @relationship(type: "REVIEWS", direction: IN)
-    categories: [Category] @relationship(type: "IN_CATEGORY", direction: OUT)
+    reviews: [Review!]! @relationship(type: "REVIEWS", direction: IN)
+    categories: [Category!]! @relationship(type: "IN_CATEGORY", direction: OUT)
   }
 
   type User {
     userID: ID!
     name: String!
-    reviews: [Review] @relationship(type: "WROTE", direction: OUT)
+    reviews: [Review!]! @relationship(type: "WROTE", direction: OUT)
   }
 
   type Review {
@@ -57,13 +57,13 @@ const typeDefs = /* GraphQL */ `
     stars: Float!
     date: Date!
     text: String
-    user: User @relationship(type: "WROTE", direction: IN)
-    business: Business @relationship(type: "REVIEWS", direction: OUT)
+    user: User! @relationship(type: "WROTE", direction: IN)
+    business: Business! @relationship(type: "REVIEWS", direction: OUT)
   }
 
   type Category {
     name: String!
-    businesses: [Business] @relationship(type: "IN_CATEGORY", direction: IN)
+    businesses: [Business!]! @relationship(type: "IN_CATEGORY", direction: IN)
   }
 `;
 
@@ -74,10 +74,11 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({ typeDefs, resolvers, driver });
 
-const server = new ApolloServer({
-  schema: neoSchema.schema,
-});
-
-server.listen().then(({ url }) => {
-  console.log(`GraphQL server ready at ${url}`);
+neoSchema.getSchema().then((schema) => {
+  const server = new ApolloServer({
+    schema,
+  });
+  server.listen().then(({ url }) => {
+    console.log(`GraphQL server ready at ${url}`);
+  });
 });
