@@ -10,7 +10,7 @@ function App() {
 
   const GET_BUSINESSES_QUERY = gql`
   query BusinessesByCategory($selectedCategory: String!) {
-    businesses(where: { categories: { name_CONTAINS: $selectedCategory } }) {
+    businesses(where: { categories_SOME: { name_CONTAINS: $selectedCategory } }) {
       businessId
       name
       address
