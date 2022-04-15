@@ -15,7 +15,12 @@ const typeDefs = gql`
     orderId: ID! @id
     created: DateTime! @timestamp(operations: [CREATE])
     customer: User! @relationship(type: "PLACED", direction: IN)
-    products: [Product!]! @relationship(type: "CONTAINS", direction: OUT, properties: "Contains")
+    products: [Product!]!
+      @relationship(
+        type: "CONTAINS"
+        direction: OUT
+        properties: "Contains"
+      )
   }
 
   type Video {
@@ -29,7 +34,7 @@ const typeDefs = gql`
   }
 
   interface Contains {
-      quantity: Int
+    quantity: Int
   }
 `;
 
@@ -40,10 +45,11 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 
-const server = new ApolloServer({
-  schema: neoSchema.schema,
-});
-
-server.listen().then(({ url }) => {
-  console.log(`GraphQL server ready on ${url}`);
+neoSchema.getSchema().then((schema) => {
+  const server = new ApolloServer({
+    schema,
+  });
+  server.listen().then(({ url }) => {
+    console.log(`GraphQL server ready on ${url}`);
+  });
 });
