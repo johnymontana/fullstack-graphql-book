@@ -2,6 +2,9 @@ const { ApolloServer, gql } = require("apollo-server-lambda");
 
 const neo4j = require("neo4j-driver");
 const { Neo4jGraphQL } = require("@neo4j/graphql");
+const {
+  Neo4jGraphQLAuthJWKSPlugin,
+} = require("@neo4j/graphql-plugin-auth");
 
 const resolvers = {
   Business: {
@@ -25,13 +28,13 @@ const typeDefs = gql`
 
   type Business {
     businessId: ID!
-    waitTime: Int! @ignore
-    averageStars: Float
+    waitTime: Int! @computed
+    averageStars: Float!
       @auth(rules: [{ isAuthenticated: true }])
       @cypher(
         statement: "MATCH (this)<-[:REVIEWS]-(r:Review) RETURN avg(r.stars)"
       )
-    recommended(first: Int = 1): [Business]
+    recommended(first: Int = 1): [Business!]!
       @cypher(
         statement: """
         MATCH (this)<-[:REVIEWS]-(:Review)<-[:WROTE]-(:User)-[:WROTE]->(:Review)-[:REVIEWS]->(rec:Business)
@@ -44,16 +47,18 @@ const typeDefs = gql`
     state: String!
     address: String!
     location: Point!
-    reviews: [Review] @relationship(type: "REVIEWS", direction: IN)
-    categories: [Category] @relationship(type: "IN_CATEGORY", direction: OUT)
+    reviews: [Review!]! @relationship(type: "REVIEWS", direction: IN)
+    categories: [Category!]!
+      @relationship(type: "IN_CATEGORY", direction: OUT)
   }
 
   type User {
     userId: ID!
     name: String!
-    reviews: [Review] @relationship(type: "WROTE", direction: OUT)
+    reviews: [Review!]! @relationship(type: "WROTE", direction: OUT)
   }
 
+  #extend type User @auth(rules: [{operations: [READ], allow: {userId: "$jwt.sub"}}, {roles: ["admin"]}])
   extend type User
     @auth(
       rules: [
@@ -67,20 +72,24 @@ const typeDefs = gql`
     stars: Float!
     date: Date!
     text: String
-    user: User @relationship(type: "WROTE", direction: IN)
-    business: Business @relationship(type: "REVIEWS", direction: OUT)
+    user: User! @relationship(type: "WROTE", direction: IN)
+    business: Business! @relationship(type: "REVIEWS", direction: OUT)
   }
 
   extend type Review
     @auth(
       rules: [
-        { operations: [CREATE, UPDATE], bind: { user: { userId: "$jwt.sub" } } }
+        {
+          operations: [CREATE, UPDATE]
+          bind: { user: { userId: "$jwt.sub" } }
+        }
       ]
     )
 
   type Category {
     name: String!
-    businesses: [Business] @relationship(type: "IN_CATEGORY", direction: IN)
+    businesses: [Business!]!
+      @relationship(type: "IN_CATEGORY", direction: IN)
   }
 `;
 
@@ -93,21 +102,27 @@ const neoSchema = new Neo4jGraphQL({
   typeDefs,
   resolvers,
   driver,
-  config: {
-    jwt: {
-      jwksEndpoint: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/.well-known/jwks.json`,
-    },
+  plugins: {
+    auth: new Neo4jGraphQLAuthJWKSPlugin({
+      jwksEndpoint: "https://grandstack.auth0.com/.well-known/jwks.json",
+    }),
   },
 });
 
-const server = new ApolloServer({
-  schema: neoSchema.schema,
-  context: ({ event }) => ({ req: event }),
-});
+const initServer = async () => {
+  return await neoSchema.getSchema().then((schema) => {
+    const server = new ApolloServer({
+      schema,
+      context: ({ event }) => ({ req: event }),
+    });
+    const serverHandler = server.createHandler();
+    return serverHandler;
+  });
+};
 
-const serverHandler = server.createHandler();
+exports.handler = async (event, context, callback) => {
+  const serverHandler = await initServer();
 
-exports.handler = (event, context, callback) => {
   return serverHandler(
     {
       ...event,
