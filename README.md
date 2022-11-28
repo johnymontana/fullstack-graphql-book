@@ -7,7 +7,7 @@ This is the companion repository to the book [*Full Stack GraphQL Applications W
 ## Table of Contents
 
 * **1: What Is Full Stack GraphQL?** ([Exercises](exercises/chapter1))
-* **2: Graph Thinking With GraphQL** (Code, Exercises)
+* **2: Graph Thinking With GraphQL** ([Code](code/chapter2), [Exercises](exercises/chapter2))
 * **3: Graphs In The Database** (Code, Exercises)
 * **4: The Neo4j GraphQL Library** (Code, Exercises)
 * **5: Building User Interfaces With React** (Code, Exercises)
