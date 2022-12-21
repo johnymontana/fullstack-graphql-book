@@ -1,7 +1,7 @@
 # Chapter One Exercises
 
 ## Exercise 1
-To familiarize yourself with GraphQL and writing GraphQL queries, explore the public movies GraphQL API at `https://movies.neo4j-graphql.com`. Open the URL in a web browser to access GraphQL Playground and explore the `DOCS` and `SCHEMA` tab to view the type definitions. 
+To familiarize yourself with GraphQL and writing GraphQL queries, explore the public movies GraphQL API at [`https://movies.neo4j-graphql.com`](). Open the URL in a web browser to access GraphQL Playground and explore the `DOCS` and `SCHEMA` tab to view the type definitions. 
 
 Try writing queries to answer the following questions:
 
