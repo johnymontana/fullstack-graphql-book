@@ -10,6 +10,7 @@ function BusinessResults(props) {
       <table>
         <thead>
           <tr>
+            <th>Star</th>
             <th>Name</th>
             <th>Address</th>
             <th>Category</th>
