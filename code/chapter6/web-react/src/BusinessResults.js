@@ -21,7 +21,19 @@ function BusinessResults(props) {
             <tr key={i}>
               <td>
                 <button
-                  onClick={() => starredVar([...starredItems, b.businessId])}
+                  onClick={() => {
+                    // toggle starred item, if starred then remove businessId from starredVar
+                    if (b.isStarred) {
+                      starredVar(
+                        starredItems.filter((i) => {
+                          return i !== b.businessId;
+                        })
+                      );
+                    } else {
+                      // not starred, add businessId to starredVar
+                      starredVar([...starredItems, b.businessId]);
+                    }
+                  }}
                 >
                   Star
                 </button>
