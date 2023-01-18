@@ -3,6 +3,7 @@ const neo4j = require("neo4j-driver");
 const { Neo4jGraphQL } = require("@neo4j/graphql");
 const {
   Neo4jGraphQLAuthJWKSPlugin,
+  Neo4jGraphQLAuthJWTPlugin,
 } = require("@neo4j/graphql-plugin-auth");
 
 const resolvers = {
@@ -16,6 +17,17 @@ const resolvers = {
 
 const typeDefs = /* GraphQL */ `
   type Query {
+    qualityBusinesses: [Business!]!
+      @cypher(
+        statement: """
+        MATCH (b:Business)<-[:REVIEWS]-(r:Review)
+        WITH b, COLLECT(r) AS reviews
+        WHERE all(r IN reviews WHERE r.stars > 4.0)
+        RETURN b
+        """
+      )
+      @auth(rules: [{ roles: ["analyst"] }])
+
     fuzzyBusinessByName(searchString: String): [Business]
       @cypher(
         statement: """
@@ -28,7 +40,7 @@ const typeDefs = /* GraphQL */ `
   type Business {
     businessId: ID!
     waitTime: Int! @computed
-    averageStars: Float!
+    averageStars: Float
       @auth(rules: [{ isAuthenticated: true }])
       @cypher(
         statement: "MATCH (this)<-[:REVIEWS]-(r:Review) RETURN avg(r.stars)"
@@ -105,6 +117,9 @@ const neoSchema = new Neo4jGraphQL({
     auth: new Neo4jGraphQLAuthJWKSPlugin({
       jwksEndpoint: "https://grandstack.auth0.com/.well-known/jwks.json",
     }),
+    // auth: new Neo4jGraphQLAuthJWTPlugin({
+    //   secret: "cQfTjWnZr4u7x!A%D*G-KaPdSgUkXp2s",
+    // }),
   },
 });
 
