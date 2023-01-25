@@ -1,0 +1,5 @@
+# Chapter 8 Exercises
+
+1. Use Neo4j Bloom to find the user who has reviewed businesses belonging to the greatest number of categories. What are the categories of the businesses this user has reviewed? Hint: creating a Neo4j Bloom search phrase might be helpful with this exercise. Consult the documentation at http://mng.bz/XZR6.
+2. Create a new pull request that updates the business review application to always order the results by business name. Use Netlify’s deploy feature to review this update before merging the pull request and updating the application.
+3. Create a new Netlify Function that uses the Neo4j JavaScript driver to query our Neo4j Aura cluster and return a list of the most recent reviews. Run it locally using the `netlify dev` command before deploying. Use the `netlify.toml` configuration to redirect `/reviews` to this function.
